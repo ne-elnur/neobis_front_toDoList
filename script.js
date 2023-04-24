@@ -17,7 +17,12 @@ window.addEventListener('load', () =>{
         const contentInput = document.querySelector('#content');
         const categoryInput = document.querySelector('input[name="category"]:checked');
 
-
+        if (contentInput.value === '') {
+            contentInput.style.border = '1.5px solid red';
+            return;
+        } else {
+            contentInput.style.border = 'none'
+        }
 
         if (!categoryInput) {
             alert('Please, select a category!');
