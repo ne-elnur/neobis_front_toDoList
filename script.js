@@ -14,9 +14,19 @@ window.addEventListener('load', () =>{
     newTodoForm.addEventListener('submit', e => {
         e.preventDefault();
 
+        const contentInput = document.querySelector('#content');
+        const categoryInput = document.querySelector('input[name="category"]:checked');
+
+
+
+        if (!categoryInput) {
+            alert('Please, select a category!');
+            return;
+        }
+
         const todo = {
-            content: e.target.elements.content.value,
-            category: e.target.elements.category.value,
+            content: contentInput.value,
+            category: categoryInput.value,
             done: false,
             createdAt: new Date().getTime()
         }
@@ -77,5 +87,40 @@ function DisplayTodos () {
         todoItem.appendChild(actions);
 
         todoList.appendChild(todoItem);
+
+        if (todo.done) {
+            todoItem.classList.add('done');
+        }
+
+        input.addEventListener('click', e => {
+            todo.done = e.target.checked;
+            localStorage.setItem('todos', JSON.stringify(todos));
+
+            if (todo.done) {
+                todoItem.classList.add('done');
+            } else {
+                todoItem.classList.remove('done');
+            }
+
+            DisplayTodos();
+        })
+
+        edit.addEventListener('click', e => {
+            const input = content.querySelector('input');
+            input.removeAttribute('readonly');
+            input.focus();
+            input.addEventListener('blur', e => {
+                input.setAttribute('readonly', true);
+                todo.content = e.target.value;
+                localStorage.setItem('todos', JSON.stringify(todos));
+                DisplayTodos();
+            })
+        })
+
+        deleteButton.addEventListener('click', e => {
+            todos = todos.filter(t => t != todo);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            DisplayTodos();
+        })
     })
 }
